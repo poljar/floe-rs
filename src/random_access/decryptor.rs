@@ -67,6 +67,12 @@ where
     /// * `header` - The Floe [`Header`] the encryptor created before any
     ///   segments were encrypted.
     ///
+    /// # Errors
+    ///
+    /// Returns an error if the parameters in the [`Header`] don't match to the
+    /// configured parameters of the [`FloeDecryptor`], if the tag of the
+    /// header is invalid, or if the configured Floe parameters are not valid.
+    ///
     /// # Examples
     #[cfg_attr(feature = "floe-gcm", doc = "```no_run")]
     #[cfg_attr(not(feature = "floe-gcm"), doc = "```ignore")]
@@ -115,6 +121,12 @@ where
     /// * `rotation_mask` - A value designating how many segments will be
     ///   encrypted before deriving a new encryption key. `2^rotation_mask`
     ///   segments are encrypted under a single key.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the parameters in the [`Header`] don't match to the
+    /// configured parameters of the [`FloeDecryptor`], if the tag of the
+    /// header is invalid, or if the configured Floe parameters are not valid.
     pub fn with_rotation_mask(
         key: &Key<A>,
         associated_data: &'a [u8],
@@ -167,6 +179,13 @@ where
     /// * `buffer` - The output buffer where the decrypted plaintext will be
     ///   copied to.
     /// * `segment_number` - The current segment number.
+    ///
+    /// # Errors
+    ///
+    ///
+    /// Returns an error if the parameters in the [`Header`] don't match to the
+    /// configured parameters of the [`FloeDecryptor`], if the tag of the
+    /// header is invalid, or if the configured Floe parameters are not valid.
     pub fn decrypt_segment(
         &self,
         segment: &Segment<'_, A, S>,

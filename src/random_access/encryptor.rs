@@ -79,7 +79,8 @@ where
     /// # Panics
     ///
     /// This function will panic if not enough randomness can be gathered to
-    /// generate the Floe initialization vector.
+    /// generate the Floe initialization vector or if the Floe parameters are
+    /// invalid.
     ///
     /// # Examples
     #[cfg_attr(feature = "floe-gcm", doc = "```")]
@@ -108,9 +109,11 @@ where
     /// ```
     #[cfg(feature = "getrandom")]
     pub fn new(key: &Key<A>, associated_data: &'a [u8]) -> Self {
+        let mut rng = UnwrapErr(SysRng);
+
         #[allow(clippy::expect_used)]
-        Self::with_rng(key, associated_data, &mut UnwrapErr(SysRng))
-            .expect("should be able to generate enough randomness for the Floe IV")
+        Self::with_rng(key, associated_data, &mut rng)
+            .expect("should have been able to create an encryptor, the parameters are incorrect?")
     }
 
     /// Create a new [`FloeEncryptor`] with the given key and associated data
@@ -126,6 +129,12 @@ where
     ///   bind this [`FloeEncryptor`] to a specific protocol.
     /// * `rng` - A random number generator which implements the [`CryptoRng`]
     ///   trait.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if not enough randomness can be gathered to generate
+    /// the Floe initialization vector or if the configured parameters are
+    /// invalid.
     pub fn with_rng<R: CryptoRng>(
         key: &Key<A>,
         associated_data: &'a [u8],
@@ -150,6 +159,12 @@ where
     /// * `rotation_mask` - A value designating how many segments will be
     ///   encrypted before deriving a new encryption key. `2^rotation_mask`
     ///   segments are encrypted under a single key.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if not enough randomness can be gathered to generate
+    /// the Floe initialization vector or if the configured parameters are
+    /// invalid.
     pub fn with_rotation_mask<R: CryptoRng>(
         key: &Key<A>,
         associated_data: &'a [u8],
@@ -224,6 +239,16 @@ where
     ///
     /// This function panics if not enough randomness can be gathered to
     /// generate an AEAD nonce to encrypt this segment.
+    ///
+    /// # Errors
+    ///
+    /// May return an error in case the:
+    /// * Plaintext length is invalid, i.e. it doesn't match the segment size or
+    ///   in case of the final segment is bigger than the configured segment
+    ///   size.
+    /// * The maximum number of segments has been reached for the used AEAD.
+    /// * Not enough randomness can be generated for the per-segment nonce.
+    /// * The output buffer doesn't have the correct size.
     #[cfg(feature = "getrandom")]
     pub fn encrypt_segment(
         &self,
@@ -247,6 +272,17 @@ where
     /// * `is_final` - Is this the final segment?
     /// * `rng` - A [`CryptoRng`] which will be used to generate a new AEAD
     ///   nonce for this segment.
+    ///
+    /// # Errors
+    ///
+    /// May return an error in case the:
+    ///
+    /// * Plaintext length is invalid, i.e. it doesn't match the segment size or
+    ///   in case of the final segment is bigger than the configured segment
+    ///   size.
+    /// * The maximum number of segments has been reached for the used AEAD.
+    /// * Not enough randomness can be generated for the per-segment nonce.
+    /// * The output buffer doesn't have the correct size.
     pub fn encrypt_segment_with_rng<R>(
         &self,
         plaintext: &[u8],
