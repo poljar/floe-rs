@@ -100,6 +100,17 @@ where
     ///
     /// *Note*: This only attempts to reinterpret the bytes as a valid
     /// [`Segment`], as such it does not copy any data.
+    ///
+    /// # Errors
+    ///
+    /// This function returns an error if the:
+    /// * The given byte slice isn't of the correct size to be decoded as a
+    ///   Segment or the segment length doesn't match the configured segment
+    ///   size.
+    /// * The configured segment size is invalid, i.e. it's too big to fit into
+    ///   an `usize`.
+    /// * The `is_final` argument conflicts with the decoded segment's reported
+    ///   final state.
     pub fn from_bytes(bytes: &'a [u8], is_final: bool) -> Result<Self, SegmentDecodeError>
     where
         A: 'a,

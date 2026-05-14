@@ -64,6 +64,10 @@ impl<const N: usize> Header<N> {
 
     /// Attempt to parse a slice of bytes into a [`Header`].
     ///
+    /// # Errors
+    ///
+    /// Returns an error if the given byte slice isn't of the correct length.
+    ///
     /// # Examples
     ///
     /// ```no_run
