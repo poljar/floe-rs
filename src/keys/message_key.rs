@@ -67,6 +67,8 @@ where
         rotation_mask: AeadRotationMask,
         is_final: bool,
     ) -> EpochKey<A> {
+        const PURPOSE_PREFIX: &[u8] = b"DEK:";
+
         // The rotation mask decides how many segments will be encrypted using the same
         // epoch key.
         let masked_counter = segment_number & rotation_mask;
@@ -74,14 +76,10 @@ where
         // The purpose will include the segment number, this binds the key to this
         // specific segment.
         let mut purpose = [0u8; 12];
-        purpose[..4].copy_from_slice(b"DEK:");
+        purpose[..4].copy_from_slice(PURPOSE_PREFIX);
         purpose[4..].copy_from_slice(&masked_counter.to_be_bytes());
 
         let mut epoch_key = EpochKey { key: Key::<A>::default(), segment_number, is_final };
-
-        // We're not reusing the `crate::utils::floe_kdf` function here for type safety
-        // reasons. We're using the `FloeKdfKey<H>` here, while the `floe_kdf`
-        // function expects a `Key<A>`.
         floe_kdf::<A, K, N, S>(&self.key, floe_iv, associated_data, &purpose, &mut epoch_key.key);
 
         epoch_key
