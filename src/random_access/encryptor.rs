@@ -82,8 +82,8 @@ where
     /// generate the Floe initialization vector.
     ///
     /// # Examples
-    ///
-    /// ```
+    #[cfg_attr(feature = "floe-gcm", doc = "```")]
+    #[cfg_attr(not(feature = "floe-gcm"), doc = "```ignore")]
     /// use floe_rs::random_access::FloeEncryptor;
     ///
     /// use aead::{Key, consts::U32};

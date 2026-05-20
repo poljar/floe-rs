@@ -70,8 +70,8 @@ where
 /// GCM-variant: [`crate::gcm::Segment`].
 ///
 /// # Examples
-///
-/// ```no_run
+#[cfg_attr(feature = "floe-gcm", doc = "```no_run")]
+#[cfg_attr(not(feature = "floe-gcm"), doc = "```ignore")]
 /// use floe_rs::types::Segment;
 /// use aes_gcm::Aes256Gcm;
 ///
