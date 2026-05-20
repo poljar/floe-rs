@@ -66,10 +66,12 @@ struct InnerSegment<A>
 where
     A: AeadCore,
 {
-    /// The header of this encrypted Floe segment.
+    /// The header of the segment, contains either [`u32::MAX`] for non-final
+    /// headers, or the length of the segment.
     header: U32<BigEndian>,
 
-    /// The AEAD nonce that was used to encrypt this segment.
+    /// The per-segment nonce of the segment, will be used to decrypt the
+    /// segment.
     nonce: Nonce<A>,
 
     /// The ciphertext of this segment.
@@ -103,10 +105,12 @@ pub struct Segment<'a, A, const S: SegmentSize>
 where
     A: AeadCore,
 {
-    /// The header of this encrypted Floe segment.
+    /// The header of the segment, contains either [`u32::MAX`] for non-final
+    /// headers, or the length of the segment.
     header: &'a U32<BigEndian>,
 
-    /// The AEAD nonce that was used to encrypt this segment.
+    /// The per-segment nonce of the segment, will be used to decrypt the
+    /// segment.
     nonce: &'a Nonce<A>,
 
     /// The ciphertext of this segment.
@@ -227,10 +231,12 @@ pub(crate) struct SegmentMut<'a, A>
 where
     A: AeadInOut,
 {
-    /// The header of this encrypted Floe segment.
+    /// The header of the segment, contains either [`u32::MAX`] for non-final
+    /// headers, or the length of the segment.
     pub(crate) header: &'a mut U32<BigEndian>,
 
-    /// The AEAD nonce that was used to encrypt this segment.
+    /// The per-segment nonce of the segment, will be used to decrypt the
+    /// segment.
     pub(crate) nonce: &'a mut Nonce<A>,
 
     /// The ciphertext of this segment.

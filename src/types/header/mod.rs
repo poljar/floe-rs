@@ -47,7 +47,7 @@ pub struct Header<const N: usize> {
     /// The Floe initialization vector contained in this header.
     floe_iv: FloeIv<N>,
 
-    /// The tag of this header.
+    /// The tag of the header, authenticating the header.
     tag: HeaderTag,
 }
 

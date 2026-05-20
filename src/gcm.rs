@@ -29,7 +29,7 @@ use crate::{
     types::{AeadRotationMask, SegmentSize},
 };
 
-/// The length of the IV the AES-GCM variant of Floe is using.
+/// The length of the Floe initialization vector for Floe-Gcm.
 const FLOE_IV_LENGTH: usize = 32;
 
 impl FloeKdf for Sha384 {

@@ -39,7 +39,7 @@ where
     A: FloeAead,
     K: FloeKdf,
 {
-    /// The array of bytes containing the key.
+    /// The main input key, provided by the user.
     key: &'a Key<A>,
 
     /// Phantom data to bind this FloeKey to the generic [FloeAead].

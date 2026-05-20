@@ -47,14 +47,14 @@ where
 /// This limits the size of the plaintext segment into `u32::MAX -
 /// segment_overhead()`.
 ///
-/// # Panics
+/// # Errors
 ///
-/// The function will panic if the segment size (S) doesn't fit into a usize,
-/// i.e. if this is used on a architecture where [usize] is [u16] and a segment
-/// size bigger than [u16::MAX] is picked.
+/// The function will return an error if the segment size (S) doesn't fit into a
+/// usize, i.e. if this is used on a architecture where [usize] is [u16] and a
+/// segment size bigger than [u16::MAX] is picked.
 ///
-/// The function also panics if the segment overhead doesn't fit into the
-/// segment, i.e. if the segment size is smaller than the segment overhead.
+/// The function also returns an error if the segment overhead doesn't fit into
+/// the segment, i.e. if the segment size is smaller than the segment overhead.
 pub(crate) fn check_segment_size<A, const S: SegmentSize>() -> Result<(), ConfigurationError>
 where
     A: AeadCore,
@@ -73,16 +73,29 @@ where
     }
 }
 
-/// The internal FLOE_KDF function.
+/// The FLOE_KDF operation from the specification.
 ///
-/// From the spec:
+/// Derives a certain amount of bytes from the input key.
+///
+/// # Arguments
+///
+/// * `key` - The input key which will be used for the derivation.
+/// * `floe_iv` - The initialization vector of the Floe session.
+/// * `associated_data` - The user-provided additional associated data.
+/// * `purpose` - The purpose of the derived output, a byte string providing
+///   domain separation for the derived output bytes.
+/// * `output` - The output buffer which will be filled with the derived bytes.
+///
+/// # Panics
+///
+/// If the input key isn't at least as long as the output length of the chosen
+/// hash. For Floe-Gcm, which uses Sha384, this is 48 bytes.
 ///
 /// ```text
 /// FLOE_KDF(key, iv, aad, purpose, len) -> byte[len]
-///
-/// Defined as KDF(key, PARAM_ENCODE(params) || iv || purpose || aad, len) where params is implicit
+/// Defined as KDF(key, PARAM_ENCODE(params) || iv || purpose || aad, len) where params is implicit from the context.
 /// from the context.
-///  ```
+/// ```
 pub(crate) fn floe_kdf<A, K, const N: usize, const S: SegmentSize>(
     key: &[u8],
     floe_iv: &FloeIv<N>,

@@ -49,10 +49,10 @@ use crate::{
 #[derive(Debug, IntoBytes, Immutable, KnownLayout)]
 #[repr(C)]
 struct AssociatedData {
-    /// The number of the segment.
+    /// The number of the current segment.
     segment_number: U64<BigEndian>,
 
-    /// Is this the final segment?
+    /// Is this segment considered to be the final one.
     is_final: bool,
 }
 

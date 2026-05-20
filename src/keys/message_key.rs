@@ -20,11 +20,11 @@
 use core::marker::PhantomData;
 
 use aead::Key;
+use hybrid_array::Array;
 
 use super::epoch_key::EpochKey;
 use crate::{
     FloeAead, FloeKdf,
-    keys::FloeKdfKey,
     types::{AeadRotationMask, FloeIv, SegmentSize},
     utils::floe_kdf,
 };
@@ -44,8 +44,8 @@ where
     A: FloeAead,
     K: FloeKdf,
 {
-    /// The array of bytes containing the key.
-    pub(super) key: FloeKdfKey<K>,
+    /// The raw bytes containing the message key.
+    pub(super) key: Array<u8, <K as digest::OutputSizeUser>::OutputSize>,
 
     /// Phantom data to bind this key to the generic [FloeAead].
     pub(super) _phantom_aead: PhantomData<A>,
