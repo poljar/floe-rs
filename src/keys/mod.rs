@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! Module modeling the different key types Floe uses.
+//! Module for the various sub-keys Floe defines.
 
 mod epoch_key;
 mod floe_key;
@@ -21,6 +21,3 @@ mod message_key;
 
 pub(crate) use floe_key::FloeKey;
 pub(crate) use message_key::MessageKey;
-
-/// The underlying byte [`hybrid_array::Array`] for a [`MessageKey`].
-pub(crate) type FloeKdfKey<K> = hybrid_array::Array<u8, <K as digest::OutputSizeUser>::OutputSize>;

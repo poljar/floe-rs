@@ -33,7 +33,7 @@ use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
 #[derive(Debug, Clone, Copy, FromBytes, IntoBytes, Unaligned, Immutable, KnownLayout)]
 #[repr(transparent)]
 pub struct FloeIv<const N: usize> {
-    /// The inner array containing the bytes of the IV.
+    /// The byte array containing the initialization vector.
     inner: [u8; N],
 }
 

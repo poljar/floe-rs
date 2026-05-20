@@ -55,10 +55,9 @@ pub enum ConfigurationError {
 
     /// The configured segment size is too big.
     ///
-    /// The segment size of the final segment is put into the segment header as
-    /// a [u32] but needs to be decoded and put into a [usize]. In case
-    /// the [usize] isn't at least 32-bit large decoding the segment length
-    /// can fail.
+    /// The error can happen segment size doesn't fit into a usize, i.e. if this
+    /// is used on a architecture where [usize] is [u16] and a segment size
+    /// bigger than [u16::MAX] is picked.
     #[error("the given segment size does not fit into an usize")]
     TooBigSegmentSize,
 }
