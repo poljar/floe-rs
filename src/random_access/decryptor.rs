@@ -68,8 +68,8 @@ where
     ///   segments were encrypted.
     ///
     /// # Examples
-    ///
-    /// ```no_run
+    #[cfg_attr(feature = "floe-gcm", doc = "```no_run")]
+    #[cfg_attr(not(feature = "floe-gcm"), doc = "```ignore")]
     /// use floe_rs::{random_access::FloeDecryptor, types::{Segment, Header}};
     ///
     /// use aead::{Key, consts::U32};
