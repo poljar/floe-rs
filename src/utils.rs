@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Common utility functions used in Floe.
+
 use aead::AeadCore;
 use hkdf::Hkdf;
 use zerocopy::IntoBytes;
@@ -23,6 +25,7 @@ use crate::{
     types::{FloeIv, Parameters, Segment, SegmentSize},
 };
 
+/// Calculate the plaintext size a non-final segment, once decrypted, will have.
 pub(crate) fn plaintext_size<A, const S: SegmentSize>() -> usize
 where
     A: AeadCore,
@@ -70,6 +73,16 @@ where
     }
 }
 
+/// The internal FLOE_KDF function.
+///
+/// From the spec:
+///
+/// ```text
+/// FLOE_KDF(key, iv, aad, purpose, len) -> byte[len]
+///
+/// Defined as KDF(key, PARAM_ENCODE(params) || iv || purpose || aad, len) where params is implicit
+/// from the context.
+///  ```
 pub(crate) fn floe_kdf<A, K, const N: usize, const S: SegmentSize>(
     key: &[u8],
     floe_iv: &FloeIv<N>,

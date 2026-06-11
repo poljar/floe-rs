@@ -13,6 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module for the Floe epoch keys.
+//!
+//! See the [`EpochKey`] documentation for more info.
+
 use aead::{AeadCore, AeadInOut, Generate, Key, KeyInit, Nonce, array::ArraySize};
 use rand_core::CryptoRng;
 use zerocopy::{BigEndian, FromBytes, Immutable, IntoBytes, KnownLayout, U64};
@@ -45,7 +49,10 @@ use crate::{
 #[derive(Debug, IntoBytes, Immutable, KnownLayout)]
 #[repr(C)]
 struct AssociatedData {
+    /// The number of the segment.
     segment_number: U64<BigEndian>,
+
+    /// Is this the final segment?
     is_final: bool,
 }
 
@@ -64,8 +71,10 @@ where
 {
     /// The AEAD key used for encrypt or decrypt operations.
     pub(super) key: Key<A>,
+
     /// The number of the segment this [`EpochKey`] operates on.
     pub(super) segment_number: u64,
+
     /// Is this [`EpochKey`] used for the last segment?
     pub(super) is_final: bool,
 }
@@ -183,11 +192,12 @@ where
         AssociatedData { segment_number: U64::new(self.segment_number), is_final: self.is_final }
     }
 
+    /// Calculate the segment header, depending on if the segment is final or
+    /// not.
+    ///
+    /// If it's the final segment, we're putting the length of the segment into
+    /// the header, otherwise a static placeholder header is used.
     fn segment_header(plaintext_buffer_length: usize, is_final: bool) -> u32 {
-        // Calculate the correct header, depending on if the segment is final or not.
-        //
-        // If it's the final segment, we're putting the length of the segment into the
-        // header, otherwise a static placeholder header is used.
         if is_final {
             // SAFETY: The FloeEncryptor::encrypt_segment method checks if the plaintext
             // length is too big and that the segment length fits into an usize.

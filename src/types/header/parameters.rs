@@ -13,6 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module for the parameters of a Floe session.
+//!
+//! See the documentation for [`Parameters`] for more information.
+
 use zerocopy::{BigEndian, FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
 
 use crate::{FloeAead, FloeKdf, types::SegmentSize};
@@ -23,9 +27,17 @@ use crate::{FloeAead, FloeKdf, types::SegmentSize};
 )]
 #[repr(C)]
 pub struct Parameters {
+    /// The unique ID of the AEAD that is used for this Floe session.
     aead_id: u8,
+
+    /// The unique ID of the KDF implementation that is used for this Floe
+    /// session.
     kdf_id: u8,
+
+    /// The configured segment length of this Floe session.
     segment_length: zerocopy::U32<BigEndian>,
+
+    /// The size of the Floe initialization vector of this Floe session.
     floe_iv_size: zerocopy::U32<BigEndian>,
 }
 
@@ -75,7 +87,7 @@ impl Parameters {
         self.kdf_id
     }
 
-    /// Get configured segment length of this Floe session.
+    /// Get the configured segment length of this Floe session.
     pub fn segment_length(&self) -> u32 {
         self.segment_length.get()
     }

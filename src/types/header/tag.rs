@@ -13,6 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module for the Floe header tag.
+//!
+//! See the documentation for [`HeaderTag`] for more information.
+
 use aead::{array::Array, consts::U32};
 use digest::typenum::Unsigned;
 use subtle::ConstantTimeEq;
@@ -31,6 +35,7 @@ pub(crate) type HeaderTagSize = U32;
 #[derive(Debug, FromBytes, IntoBytes, Unaligned, Immutable, KnownLayout)]
 #[repr(transparent)]
 pub struct HeaderTag {
+    /// The inner array containing the bytes of the tag.
     pub(crate) inner: Array<u8, HeaderTagSize>,
 }
 
