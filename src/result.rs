@@ -13,10 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Error types for Floe.
+
 use thiserror::Error;
 
 use crate::types::{Parameters, SegmentSize};
 
+/// The given Floe configuration contains errors.
+///
+/// For example, this can occur when an invalid segment size is specified,
+/// whether it is too large or too small.
 #[derive(Debug, Error)]
 pub enum ConfigurationError {
     /// The given output buffer was either too big or too small.
@@ -47,6 +53,12 @@ pub enum ConfigurationError {
         got: SegmentSize,
     },
 
+    /// The configured segment size is too big.
+    ///
+    /// The segment size of the final segment is put into the segment header as
+    /// a [u32] but needs to be decoded and put into a [usize]. In case
+    /// the [usize] isn't at least 32-bit large decoding the segment length
+    /// can fail.
     #[error("the given segment size does not fit into an usize")]
     TooBigSegmentSize,
 }

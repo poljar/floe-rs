@@ -13,6 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Traits for the generic Floe implementation.
+//!
+//! These traits are mainly required to define the constants Floe attaches to
+//! the AEAD and KDF implementation that is used.
+//!
+//! These constants will be put into the Floe header and bound to the Floe
+//! session alongisde its other parameters.
+
 use core::num::NonZero;
 
 use aead::AeadInOut;

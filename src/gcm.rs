@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! Implementation of Floe using the AES-GCM variant.
+//! Implementation of the Floe AES-GCM variant.
 //!
 //! The crate offers a generic Floe implementation. This module specializes it
 //! by providing type aliases for the GCM-based variant.
@@ -29,6 +29,7 @@ use crate::{
     types::{AeadRotationMask, SegmentSize},
 };
 
+/// The length of the IV the AES-GCM variant of Floe is using.
 const FLOE_IV_LENGTH: usize = 32;
 
 impl FloeKdf for Sha384 {
@@ -41,7 +42,9 @@ impl FloeAead for Aes256Gcm {
     // As per the Floe spec defined in the derived parameters part:
     // https://github.com/Snowflake-Labs/floe-specification/blob/main/spec/README.md#derived-parameters
     const AEAD_ID: u8 = 0;
+
     const AEAD_ROTATION_MASK: AeadRotationMask = !((1u64 << 20) - 1);
+
     #[allow(clippy::expect_used)]
     const AEAD_MAX_SEGMENTS: NonZero<u64> = NonZero::new(1 << 40)
         .expect("should be able to create a non-zero value, as this clearly isn't zero");

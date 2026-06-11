@@ -13,6 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module for the Floe message key.
+//!
+//! See the [MessageKey] documentation for more info.
+
 use core::marker::PhantomData;
 
 use aead::Key;
@@ -40,8 +44,13 @@ where
     A: FloeAead,
     K: FloeKdf,
 {
+    /// The array of bytes containing the key.
     pub(super) key: FloeKdfKey<K>,
+
+    /// Phantom data to bind this key to the generic [FloeAead].
     pub(super) _phantom_aead: PhantomData<A>,
+
+    /// Phantom data to bind this key to the generic [FloeKdf].
     pub(super) _phantom: PhantomData<K>,
 }
 

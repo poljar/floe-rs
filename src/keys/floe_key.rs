@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module for the Floe key, the main input key for a Floe session.
+
 use core::marker::PhantomData;
 
 use aead::Key;
@@ -37,8 +39,13 @@ where
     A: FloeAead,
     K: FloeKdf,
 {
+    /// The array of bytes containing the key.
     key: &'a Key<A>,
+
+    /// Phantom data to bind this FloeKey to the generic [FloeAead].
     _phantom_aead: PhantomData<A>,
+
+    /// Phantom data to bind this FloeKey to the generic [FloeKdf].
     _phantom: PhantomData<K>,
 }
 

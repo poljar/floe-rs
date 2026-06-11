@@ -13,6 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module for the Floe initialization vector.
+//!
+//! See the documentation for [`FloeIv`] for more information.
+
 use rand_core::CryptoRng;
 use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
 
@@ -29,6 +33,7 @@ use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout, Unaligned};
 #[derive(Debug, Clone, Copy, FromBytes, IntoBytes, Unaligned, Immutable, KnownLayout)]
 #[repr(transparent)]
 pub struct FloeIv<const N: usize> {
+    /// The inner array containing the bytes of the IV.
     inner: [u8; N],
 }
 

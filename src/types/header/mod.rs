@@ -13,6 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module for the Floe header.
+//!
+//! See the documentation for [`Header`] for more information.
+
 pub(crate) mod parameters;
 pub(crate) mod tag;
 
@@ -37,8 +41,13 @@ use crate::{
 #[derive(Debug, FromBytes, IntoBytes, Unaligned, Immutable, KnownLayout)]
 #[repr(C)]
 pub struct Header<const N: usize> {
+    /// The parameter information contained in this header.
     parameters: Parameters,
+
+    /// The Floe initialization vector contained in this header.
     floe_iv: FloeIv<N>,
+
+    /// The tag of this header.
     tag: HeaderTag,
 }
 
@@ -102,6 +111,9 @@ impl<const N: usize> Header<N> {
     }
 
     /// Get the tag of this header.
+    ///
+    /// This tag is authenticating the header and binding the parameters and IV
+    /// to this Floe session.
     pub fn tag(&self) -> &HeaderTag {
         &self.tag
     }

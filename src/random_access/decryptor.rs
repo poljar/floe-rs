@@ -13,6 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module containing the random-access decryption support defined in the [Floe
+//! specification].
+//!
+//! [Floe specification]: https://github.com/Snowflake-Labs/floe-specification/blob/main/spec/README.md#semi-public-functions-random-access
+
 use aead::{AeadCore, Key, array::ArraySize};
 use subtle::ConstantTimeEq;
 use zerocopy::{FromBytes, Immutable};

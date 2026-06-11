@@ -13,6 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module modeling the Floe segment
+//!
+//! See the documentation for [`Segment`] and [`SegmentMut`] for more
+//! information.
+
 use aead::{
     AeadCore, AeadInOut, Nonce, Tag,
     array::{ArraySize, typenum::Unsigned},
@@ -40,6 +45,9 @@ pub(crate) const SEGMENT_HEADER_LENGTH: usize = size_of::<u32>();
 /// The segment header for any non-final encrypted segment.
 pub(crate) const NON_FINAL_SEGMENT_HEADER: u32 = u32::MAX;
 
+/// Calculate the overhead an encrypted segment will have. The overhead here
+/// means the additional space that's required in addition to the ciphertext,
+/// which will be the same length as the plaintext.
 const fn segment_overhead<A: AeadCore>() -> usize {
     SEGMENT_HEADER_LENGTH + A::NonceSize::USIZE + A::TagSize::USIZE
 }
@@ -48,14 +56,23 @@ const fn segment_overhead<A: AeadCore>() -> usize {
 ///
 /// Since those types only differ in their mutability, we can use this type to
 /// parse the common parts of an encrypted segment.
+///
+/// The ciphertext has a variable length, so we can't parse the whole thing in
+/// one go, we first need to split out the AEAD tag from the back and then parse
+/// the remaining bytes.
 #[derive(FromBytes, IntoBytes, Immutable, KnownLayout)]
 #[repr(C)]
 struct InnerSegment<A>
 where
     A: AeadCore,
 {
+    /// The header of this encrypted Floe segment.
     header: U32<BigEndian>,
+
+    /// The AEAD nonce that was used to encrypt this segment.
     nonce: Nonce<A>,
+
+    /// The ciphertext of this segment.
     ciphertext: [u8],
 }
 
@@ -86,9 +103,16 @@ pub struct Segment<'a, A, const S: SegmentSize>
 where
     A: AeadCore,
 {
+    /// The header of this encrypted Floe segment.
     header: &'a U32<BigEndian>,
+
+    /// The AEAD nonce that was used to encrypt this segment.
     nonce: &'a Nonce<A>,
+
+    /// The ciphertext of this segment.
     ciphertext: &'a [u8],
+
+    /// The AEAD tag which was created when the segment was encrypted.
     tag: &'a Tag<A>,
 }
 
@@ -203,9 +227,16 @@ pub(crate) struct SegmentMut<'a, A>
 where
     A: AeadInOut,
 {
+    /// The header of this encrypted Floe segment.
     pub(crate) header: &'a mut U32<BigEndian>,
+
+    /// The AEAD nonce that was used to encrypt this segment.
     pub(crate) nonce: &'a mut Nonce<A>,
+
+    /// The ciphertext of this segment.
     pub(crate) ciphertext: &'a mut [u8],
+
+    /// The AEAD tag which was created when the segment was encrypted.
     pub(crate) tag: &'a mut Tag<A>,
 }
 

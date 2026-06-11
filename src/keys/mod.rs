@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//! Module modeling the different key types Floe uses.
+
 mod epoch_key;
 mod floe_key;
 mod message_key;
