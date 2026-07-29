@@ -86,6 +86,11 @@ impl<const N: usize> Header<N> {
         })
     }
 
+    /// Represent this Floe [`Header`] as a slice of bytes.
+    pub fn as_bytes(&self) -> &[u8] {
+        IntoBytes::as_bytes(self)
+    }
+
     /// Get the parameter information contained in this header.
     pub fn parameters(&self) -> &Parameters {
         &self.parameters
