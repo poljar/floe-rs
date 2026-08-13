@@ -61,7 +61,8 @@ where
     <<A as AeadCore>::TagSize as ArraySize>::ArrayType<u8>: FromBytes + Immutable,
     <<A as AeadCore>::NonceSize as ArraySize>::ArrayType<u8>: FromBytes + Immutable,
 {
-    /// Create a new [`FloeDecryptor`] with the given key and associated data.
+    /// Create a new [`FloeDecryptor`] with the given key and associated data
+    /// and header.
     ///
     /// # Arguments
     ///
@@ -186,7 +187,6 @@ where
     /// * `segment_number` - The current segment number.
     ///
     /// # Errors
-    ///
     ///
     /// Returns an error if the parameters in the [`Header`] don't match to the
     /// configured parameters of the [`FloeDecryptor`], if the tag of the

@@ -137,9 +137,12 @@ where
     ///
     /// # Errors
     ///
-    /// Returns an error if not enough randomness can be gathered to generate
-    /// the Floe initialization vector or if the configured parameters are
-    /// invalid.
+    /// Returns an error if if the configured parameters are invalid.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if not enough randomness can be gathered to
+    /// generate the Floe initialization vector.
     pub fn with_rng<R: CryptoRng>(
         key: &Key<A>,
         associated_data: &'a [u8],
@@ -240,11 +243,6 @@ where
     /// * `segment_number` - The current segment number.
     /// * `is_final` - Is this the final segment?
     ///
-    /// # Panics
-    ///
-    /// This function panics if not enough randomness can be gathered to
-    /// generate an AEAD nonce to encrypt this segment.
-    ///
     /// # Errors
     ///
     /// May return an error in case the:
@@ -254,6 +252,11 @@ where
     /// * The maximum number of segments has been reached for the used AEAD.
     /// * Not enough randomness can be generated for the per-segment nonce.
     /// * The output buffer doesn't have the correct size.
+    ///
+    /// # Panics
+    ///
+    /// This function panics if not enough randomness can be gathered to
+    /// generate an AEAD nonce to encrypt this segment.
     #[cfg(feature = "getrandom")]
     pub fn encrypt_segment(
         &self,
@@ -286,8 +289,12 @@ where
     ///   in case of the final segment is bigger than the configured segment
     ///   size.
     /// * The maximum number of segments has been reached for the used AEAD.
-    /// * Not enough randomness can be generated for the per-segment nonce.
     /// * The output buffer doesn't have the correct size.
+    ///
+    /// # Panics
+    ///
+    /// This function panics if not enough randomness can be gathered to
+    /// generate an AEAD nonce to encrypt this segment.
     pub fn encrypt_segment_with_rng<R>(
         &self,
         plaintext: &[u8],
