@@ -76,19 +76,20 @@ where
     ) -> HeaderTag {
         const PURPOSE: &[u8] = b"HEADER_TAG:";
 
-        // XXX: We're using the HKDF-Expand function without the extract step. The
-        // HKDF-Expand function requires the pseudorandom input key to be the
-        // same size as the output size of the hash[1][2].
+        // XXX: We're using the HKDF-Expand function without the extract step.
+        // The HKDF-Expand function requires the pseudorandom input key
+        // to be the same size as the output size of the hash[1][2].
         //
-        // Our input key material is the Floe key, which is defined to be as long
-        // as the AEAD key. In the Floe-GCM case this will mean the key will be 32 bytes
-        // while the output size is 48 bytes.
+        // Our input key material is the Floe key, which is defined to be as
+        // long as the AEAD key. In the Floe-GCM case this will mean the
+        // key will be 32 bytes while the output size is 48 bytes.
         //
-        // To be able to use the `Hkdf::from_prk` method we're going to replicate what
-        // HMAC does if the key isn't long enough, namely we pad it with zeroes[3].
+        // To be able to use the `Hkdf::from_prk` method we're going to
+        // replicate what HMAC does if the key isn't long enough, namely
+        // we pad it with zeroes[3].
         //
-        // We're padding the key to the output size of the hash, while HMAC will pad it
-        // further to the block size. The end result is the same.
+        // We're padding the key to the output size of the hash, while HMAC will
+        // pad it further to the block size. The end result is the same.
         //
         // [1]: https://datatracker.ietf.org/doc/html/rfc5869#section-2.3
         // [2]: https://docs.rs/hkdf/0.13.0/hkdf/type.Hkdf.html#method.from_prk
@@ -122,8 +123,8 @@ where
     ) -> MessageKey<A, K> {
         const PURPOSE: &[u8] = b"MESSAGE_KEY:";
 
-        // XXX: Same as in the `FloeKey::derive_header_tag` method, we need to pad the
-        // key to make Hkdf::from_prk happy.
+        // XXX: Same as in the `FloeKey::derive_header_tag` method, we need to
+        // pad the key to make Hkdf::from_prk happy.
         let mut key = Array::<u8, K::OutputSize>::default();
         key.as_mut_slice()[..self.key.len()].copy_from_slice(self.key);
 

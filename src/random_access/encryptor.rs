@@ -198,8 +198,9 @@ where
     /// [`FloeEncryptor::encrypt_segment`] call, unless the segment is
     /// considered to be final.
     pub fn input_size(&self) -> usize {
-        // SAFETY: The constructor of the FloeEncryptor checks that the segment size
-        // fits into an usize and that it's bigger than the overhead.
+        // SAFETY: The constructor of the FloeEncryptor checks that the segment
+        // size fits into an usize and that it's bigger than the
+        // overhead.
         plaintext_size::<A, S>()
     }
 
@@ -330,7 +331,8 @@ where
                 });
             }
 
-            // SAFETY: This subtraction is always fine since AEAD_MAX_SEGMENTS is NonZero.
+            // SAFETY: This subtraction is always fine since AEAD_MAX_SEGMENTS
+            // is NonZero.
             if segment_number >= (A::AEAD_MAX_SEGMENTS.get() - 1) {
                 return Err(
                     ConfigurationError::MaxSegmentsReached(A::AEAD_MAX_SEGMENTS.get()).into()
@@ -338,8 +340,8 @@ where
             }
         }
 
-        // Parse the output buffer as a SegmentMut, this copies the plaintext into the
-        // output buffer as well.
+        // Parse the output buffer as a SegmentMut, this copies the plaintext
+        // into the output buffer as well.
         let segment = SegmentMut::from_buffer_and_plaintext(plaintext, buffer)?;
 
         // Now we derive an epoch key for this segment.

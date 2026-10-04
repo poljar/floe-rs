@@ -279,9 +279,9 @@ where
 
         let segment = SegmentMut { header, nonce, ciphertext, tag };
 
-        // Now copy the plaintext into the ciphertext part of the output buffer, the
-        // AEAD will later replace the plaintext bytes in-place with the
-        // ciphertext bytes.
+        // Now copy the plaintext into the ciphertext part of the output buffer,
+        // the AEAD will later replace the plaintext bytes in-place with
+        // the ciphertext bytes.
         segment.ciphertext.copy_from_slice(plaintext);
 
         Ok(segment)

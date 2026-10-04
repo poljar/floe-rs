@@ -60,9 +60,9 @@ impl Parameters {
         A: FloeAead,
         K: FloeKdf,
     {
-        // The floe IV length, needs to converted to an u32 as the Floe spec expects 4
-        // bytes. See the TODO item in the floe_iv.rs file how we can avoid this
-        // panic in the future.
+        // The floe IV length, needs to converted to an u32 as the Floe spec
+        // expects 4 bytes. See the TODO item in the floe_iv.rs file how
+        // we can avoid this panic in the future.
         #[allow(clippy::expect_used)]
         let floe_iv_length =
             u32::try_from(N).expect("the Floe IV is too long, it must be smaller than u32::MAX");

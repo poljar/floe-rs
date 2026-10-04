@@ -78,12 +78,12 @@ where
     ) -> EpochKey<A> {
         const PURPOSE_PREFIX: &[u8] = b"DEK:";
 
-        // The rotation mask decides how many segments will be encrypted using the same
-        // epoch key.
+        // The rotation mask decides how many segments will be encrypted using
+        // the same epoch key.
         let masked_counter = segment_number & rotation_mask;
 
-        // The purpose will include the segment number, this binds the key to this
-        // specific segment.
+        // The purpose will include the segment number, this binds the key to
+        // this specific segment.
         let mut purpose = [0u8; 12];
         purpose[..4].copy_from_slice(PURPOSE_PREFIX);
         purpose[4..].copy_from_slice(&masked_counter.to_be_bytes());
