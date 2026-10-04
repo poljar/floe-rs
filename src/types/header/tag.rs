@@ -45,8 +45,8 @@ impl HeaderTag {
 
     /// Represent the [`HeaderTag`] as an array of bytes.
     pub fn as_array(&self) -> &[u8; HeaderTagSize::USIZE] {
-        // SAFETY: This can't panic as we are guaranteed to have used the correct array
-        // size.
+        // SAFETY: This can't panic as we are guaranteed to have used the
+        // correct array size.
         #[allow(clippy::expect_used, clippy::missing_panics_doc)]
         self.inner.as_array().expect("We should be able to convert the Array to a primitive array")
     }

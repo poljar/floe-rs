@@ -172,8 +172,9 @@ where
     /// using the [`Segment::plaintext_size`] method if the segment is the final
     /// segment.
     pub fn plaintext_size(&self) -> usize {
-        // SAFETY: The constructor of the FloeDecryptor checks that the segment size
-        // fits into an usize and that it's bigger than the overhead.
+        // SAFETY: The constructor of the FloeDecryptor checks that the segment
+        // size fits into an usize and that it's bigger than the
+        // overhead.
         plaintext_size::<A, S>()
     }
 
@@ -197,12 +198,15 @@ where
         buffer: &mut [u8],
         segment_number: u64,
     ) -> Result<(), DecryptionError> {
-        // SAFETY: This subtraction is always fine since AEAD_MAX_SEGMENTS is NonZero.
+        // SAFETY: This subtraction is always fine since AEAD_MAX_SEGMENTS is
+        // NonZero.
         //
-        // We're subtracting by 0 or by 1 depending on if the segment is final. If you
-        // cast a bool into an integer, true will be 1 and false will be 0[1].
+        // We're subtracting by 0 or by 1 depending on if the segment is final.
+        // If you cast a bool into an integer, true will be 1 and false
+        // will be 0[1].
         //
-        // This trick with the boolean avoids a if/else branch on the is_final() result.
+        // This trick with the boolean avoids a if/else branch on the is_final()
+        // result.
         //
         // [1]: https://doc.rust-lang.org/std/primitive.bool.html
         let max_segments = A::AEAD_MAX_SEGMENTS.get() - u64::from(!segment.is_final());

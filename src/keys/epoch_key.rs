@@ -114,14 +114,17 @@ where
     where
         R: CryptoRng,
     {
-        // Creating a SegmentMut has already copied the plaintext into the ciphertext
-        // field, let's just create a borrow of that field for our convenience.
+        // Creating a SegmentMut has already copied the plaintext into the
+        // ciphertext field, let's just create a borrow of that field
+        // for our convenience.
         let plaintext_buffer = segment.ciphertext;
 
-        // Calculate the correct header, depending on if the segment is final or not.
+        // Calculate the correct header, depending on if the segment is final or
+        // not.
         //
-        // If it's the final segment, we're putting the length of the segment into the
-        // header, otherwise a static placeholder header is used.
+        // If it's the final segment, we're putting the length of the segment
+        // into the header, otherwise a static placeholder header is
+        // used.
         let header = Self::segment_header(plaintext_buffer.len(), self.is_final);
 
         // Generate a new random AEAD nonce.
@@ -199,8 +202,9 @@ where
     /// the header, otherwise a static placeholder header is used.
     fn segment_header(plaintext_buffer_length: usize, is_final: bool) -> u32 {
         if is_final {
-            // SAFETY: The FloeEncryptor::encrypt_segment method checks if the plaintext
-            // length is too big and that the segment length fits into an usize.
+            // SAFETY: The FloeEncryptor::encrypt_segment method checks if the
+            // plaintext length is too big and that the segment
+            // length fits into an usize.
             #[allow(clippy::expect_used)]
             let final_segment_length =
                 plaintext_buffer_length.checked_add(SegmentMut::<A>::overhead()).expect(
@@ -208,8 +212,8 @@ where
                     to the length of the final segment shouldn't overflow",
                 );
 
-            // SAFETY: The FloeEncryptor constructor panics if we can't encode the maximal
-            // final segment length into a `u32`.
+            // SAFETY: The FloeEncryptor constructor panics if we can't encode
+            // the maximal final segment length into a `u32`.
             #[allow(clippy::expect_used)]
             let final_segment_length: u32 = final_segment_length
                 .try_into()
